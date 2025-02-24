@@ -1,8 +1,7 @@
 import streamlit as st
 import fitz
-import base64
-import re  # Usado para limpar o HTML, se necessário
-from analiser_ai import analyze_resume_complete  # Atualizado para usar a análise completa
+import re  
+from analiser_ai import analyze_resume_complete 
 
 st.set_page_config(page_title="Analisador de Currículos IA", layout="wide")
 
@@ -55,10 +54,6 @@ if uploaded_file is not None:
     # Lê os bytes do arquivo enviado
     file_bytes = uploaded_file.read()
     
-    # Cria a visualização exata do PDF usando Base64
-    base64_pdf = base64.b64encode(file_bytes).decode('utf-8')
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800" type="application/pdf"></iframe>'
-    
     # Extrai o texto do PDF utilizando PyMuPDF (fitz)
     doc = fitz.open(stream=file_bytes, filetype="pdf")
     resume_text = "\n".join([page.get_text("text") for page in doc])
@@ -66,18 +61,13 @@ if uploaded_file is not None:
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # Exibição lado a lado: PDF e texto extraído
-if pdf_display and resume_text:
-    cols = st.columns(2)
-    with cols[0]:
-        st.subheader("📄 Visualização do PDF")
-        st.markdown(pdf_display, unsafe_allow_html=True)
-    with cols[1]:
-        st.subheader("📋 Texto Extraído do Currículo")
-        st.markdown(f"""
-        <div class="resume-box">
-            <pre>{resume_text}</pre>
-        </div>
-        """, unsafe_allow_html=True)
+if resume_text:
+    st.subheader("📋 Texto Extraído do Currículo")
+    st.markdown(f"""
+    <div class="resume-box">
+        <pre>{resume_text}</pre>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Botão para análise completa
 if resume_text:

@@ -8,21 +8,9 @@ groq_key = os.getenv("GROQ_API_KEY")
 
 # --- Prompt principal (mantido conforme já configurado) ---
 prompt_template = """
-Você é um especialista em análise de currículos. Sua resposta **DEVE SER ESTRUTURADA** no seguinte formato, com cores específicas para cada seção:
+Você é um especialista em análise de currículos. 
 
-Na cor verde em markdown:
-✅ <span style="color:green"><strong>Pontos Fortes</strong></span>  
-- <span style="color:green">[Coloque aqui os pontos positivos do currículo]</span>  
-
-Na cor amarela em markdown:
-⚠️ <span style="color:orange"><strong>Oportunidades de Melhoria</strong></span>  
-- <span style="color:orange">[Coloque aqui as sugestões de melhoria]</span>  
-
-Na cor vermelha em markdown: 
-❌ <span style="color:red"><strong>Aspectos Ruins</strong></span>  
-- <span style="color:red">[Coloque aqui os problemas encontrados]</span>  
-
-Além disso, analise os seguintes aspectos do currículo:
+Analise os seguintes aspectos do currículo:
 - **Organização e Estrutura:** Verifique se o currículo está organizado, com seções claramente definidas e informações bem distribuídas.
 - **Clareza e Objetividade:** Avalie se as informações são apresentadas de forma clara, objetiva e sem ambiguidades.
 - **Conteúdo Relevante:** Considere a pertinência das informações apresentadas para a área de atuação e os objetivos profissionais.
@@ -74,6 +62,8 @@ strength_prompt_template = """
 Responda em português.
 Preciso de uma análise detalhada e explicação dos pontos fortes do currículo abaixo e, ao final, uma conclusão.
 
+Traga estas informaçoes com texto na cor verde.
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 {resume_text}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -88,6 +78,7 @@ weakness_prompt_template = """
 Responda em português.
 Preciso de uma análise detalhada e explicação dos pontos fracos do currículo abaixo, além de sugestões de como melhorá-lo para torná-lo mais competitivo.
 
+Traga estas informaçoes com texto na cor vermelha.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 {resume_text}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -123,9 +114,6 @@ def analyze_resume_complete(resume_text):
     weakness_result = weakness_chain.invoke(input=resume_text)
     job_role_result = job_role_chain.invoke(input=resume_text)
     
-    # Se desejar, você pode implementar uma lógica para calcular a nota final
-    final_score = "85"
-    
     final_html = f"""
     <h2>Resumo do Currículo</h2>
     {summary_result}
@@ -135,6 +123,5 @@ def analyze_resume_complete(resume_text):
     {weakness_result}
     <h2>Vagas de Emprego Sugeridas</h2>
     {job_role_result}
-    <h2>Nota Final: {final_score}/100</h2>
     """
     return final_html
