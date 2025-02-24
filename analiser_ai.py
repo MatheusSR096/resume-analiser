@@ -35,7 +35,7 @@ prompt = PromptTemplate(
     input_variables=["resume_text"],
 )
 
-llm = ChatGroq(temperature=0.2, model="llama-3.3-70b-versatile", api_key=groq_key)
+llm = ChatGroq(temperature=0.2, model="llama3-70b-8192", api_key=groq_key)
 chain = prompt | llm | StrOutputParser()
 
 def analyze_resume(resume_text):
